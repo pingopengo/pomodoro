@@ -2,27 +2,49 @@ package main
 
 import (
 	"fmt"
+	"github.com/schollz/progressbar/v3"
 	"time"
 )
 
 func startTimer(duration, shortBreak, longBreak int) {
 	var pomodorosCompleted int
+
 	for pomodorosCompleted < pomodoros {
+
 		if duration == 1 {
 			fmt.Println("Starting timer for", duration, "minute! 🕑")
 		} else {
 			fmt.Println("Starting timer for", duration, "minutes! 🕑")
 		}
+		// progress bar
+		bar := progressbar.Default(int64(duration))
+		for i := 0; i < duration; i++ {
+			time.Sleep(time.Second * 1)
+			err := bar.Add(1)
+			if err != nil {
+				return
+			}
 
+			// time.Sleep(time.Duration(duration) * time.Minute)
+		}
 		time.Sleep(time.Duration(duration) * time.Minute)
 		fmt.Println("Timer ended! 🕑")
+		err := bar.Finish()
+		if err != nil {
+			return
+		}
 		pomodorosCompleted++
 		sendNotificationEnd()
+
 		if pomodorosCompleted%4 == 0 {
 			fmt.Println("Starting timer for", longBreak, "minutes! 🕑")
+
 			time.Sleep(time.Duration(longBreak) * time.Minute)
+
 			fmt.Println("Timer ended! 🕑")
+
 			sendNotificationEnd()
+
 		} else if pomodorosCompleted == pomodoros {
 			fmt.Println("You have completed", pomodoros, "pomodoros! 🎉")
 			break
