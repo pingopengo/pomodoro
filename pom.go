@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/deckarep/gosx-notifier"
 	"time"
 )
 
@@ -17,7 +18,11 @@ func main() {
 	for {
 		if !pomodoroSelectionDone {
 			pomodoroSelection()
-
+			n := gosxnotifier.NewNotification("Pomodoro session started! 🕑")
+			n.Title = "Pomodoro Timer"
+			n.Sound = gosxnotifier.Basso
+			n.AppIcon = "pomodoro.png"
+			n.Push()
 		} else if pomodoroSelectionDone == true {
 
 			fmt.Println("1. Start timer with default settings! 😊")
@@ -44,6 +49,7 @@ func main() {
 			}
 		}
 	}
+
 }
 
 func pomodoroSelection() {
@@ -74,11 +80,12 @@ func startTimer(duration, shortBreak, longBreak int) {
 		time.Sleep(time.Duration(duration) * time.Minute)
 		fmt.Println("Timer ended! 🕑")
 		pomodorosCompleted++
-
+		sendNotificationEnd()
 		if pomodorosCompleted%4 == 0 {
 			fmt.Println("Starting timer for", longBreak, "minutes! 🕑")
 			time.Sleep(time.Duration(longBreak) * time.Minute)
 			fmt.Println("Timer ended! 🕑")
+			sendNotificationEnd()
 		} else if pomodorosCompleted == pomodoros {
 			fmt.Println("You have completed", pomodoros, "pomodoros! 🎉")
 			break
@@ -86,12 +93,20 @@ func startTimer(duration, shortBreak, longBreak int) {
 			fmt.Println("Starting timer for", shortBreak, "minutes! 🕑")
 			time.Sleep(time.Duration(shortBreak) * time.Minute)
 			fmt.Println("Timer ended! 🕑")
+			sendNotificationEnd()
 		}
-
 	}
 
 	fmt.Println("Timer started! 🕑")
 	fmt.Println("You have", duration, "minutes to work! 📝")
 	fmt.Println("You have", shortBreak, "minutes for a short break! ☕️")
 	fmt.Println("You have", longBreak, "minutes for a long break! 🍃")
+}
+
+func sendNotificationEnd() {
+	n := gosxnotifier.NewNotification("Timer ended! 🕑")
+	n.Title = "Pomodoro Timer"
+	n.Sound = gosxnotifier.Basso
+	n.AppIcon = "pomodoro.png"
+	n.Push()
 }
