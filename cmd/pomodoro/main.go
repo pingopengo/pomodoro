@@ -18,6 +18,9 @@ func main() {
 	for {
 		if !pomodoroSelectionDone {
 			internal.PomodoroSelection()
+
+			// TODO: fix the loop after selecting the amount of pomodoros
+
 			n := gosxnotifier.NewNotification("Pomodoro session started! 🕑")
 			n.Title = "Pomodoro Timer"
 			n.Sound = gosxnotifier.Basso
