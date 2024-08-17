@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/deckarep/gosx-notifier"
+	"pomodoro/internal"
 )
 
 var (
@@ -16,7 +17,7 @@ var (
 func main() {
 	for {
 		if !pomodoroSelectionDone {
-			pomodoroSelection()
+			internal.PomodoroSelection()
 			n := gosxnotifier.NewNotification("Pomodoro session started! 🕑")
 			n.Title = "Pomodoro Timer"
 			n.Sound = gosxnotifier.Basso
@@ -34,11 +35,11 @@ func main() {
 
 			switch input {
 			case 1:
-				startTimer(duration, shortBreak, longBreak)
+				internal.StartTimer(pomodoros, duration, shortBreak, longBreak, sendNotificationEnd)
 
 			case 2:
-				setCustomTimer()
-				startTimer(duration, shortBreak, longBreak)
+				internal.SetCustomTimer()
+				internal.StartTimer(pomodoros, duration, shortBreak, longBreak, sendNotificationEnd)
 
 			case 3:
 				fmt.Println("die stupid! 😡")
@@ -55,5 +56,8 @@ func sendNotificationEnd() {
 	n.Title = "Pomodoro Timer"
 	n.Sound = gosxnotifier.Basso
 	n.AppIcon = "pomodoro.png"
-	n.Push()
+	err := n.Push()
+	if err != nil {
+		return
+	}
 }

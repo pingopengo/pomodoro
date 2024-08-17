@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func startTimer(duration, shortBreak, longBreak int) {
+func StartTimer(pomodoros, duration, shortBreak, longBreak int, sendNotificationEnd func()) {
 	var pomodorosCompleted int
 
 	for pomodorosCompleted < pomodoros {
